@@ -1,0 +1,4 @@
+DB_CONNECT=mongodb+srv://itsqueueit:Queueit123@cluster0.1nxm3ie.mongodb.net/
+TOKEN_SECRET=asdasdawqw
+REFRESH_TOKEN_SECRET=asdassasdaddawqw
+// env 
