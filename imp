@@ -1,4 +1,10 @@
-DB_CONNECT=mongodb+srv://itsqueueit:Queueit123@cluster0.1nxm3ie.mongodb.net/
-TOKEN_SECRET=asdasdawqw
-REFRESH_TOKEN_SECRET=asdassasdaddawqw
-// env 
+//// env 
+
+// DB_CONNECT=mongodb+srv://itsqueueit:Queueit123@cluster0.1nxm3ie.mongodb.net/
+// TOKEN_SECRET=asdasdawqw
+// REFRESH_TOKEN_SECRET=asdassasdaddawqw
+
+
+/// route
+//http://localhost:8101/api/auth/get-clubs/?club_id=123
+//http://localhost:8101/api/auth/api/auth/add-club
