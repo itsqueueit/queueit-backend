@@ -1,10 +1,12 @@
-//// env 
-
-// DB_CONNECT=mongodb+srv://itsqueueit:Queueit123@cluster0.1nxm3ie.mongodb.net/
-// TOKEN_SECRET=asdasdawqw
-// REFRESH_TOKEN_SECRET=asdassasdaddawqw
+//DB_CONNECT=mongodb+srv://itsqueueit:Queueit123@cluster0.1nxm3ie.mongodb.net/
+//TOKEN_SECRET=asdasdawqw
+//REFRESH_TOKEN_SECRET=asdassasdaddawqw
+//TWILIO_ACCOUNT_SID=AC0e14bf96464d3eec0420d7fea2bd710a
+//TWILIO_AUTH_TOKEN=ab5a8f61458f3a9bdbb1ddacbd0d38d1
 
 
 /// route
 //http://localhost:8101/api/auth/get-clubs/?club_id=123
 //http://localhost:8101/api/auth/api/auth/add-club
+//http://localhost:8101/aapi/auth/sign-up
+//http://localhost:8101/api/auth/verify-otp
