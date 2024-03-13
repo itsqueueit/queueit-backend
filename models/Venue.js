@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  clubType: {
+  venueType: {
     type: String,
     required: true,
   },
-  clubName: {
+  venueName: {
     type: String,
     required: true,
   },
-  clubId: {
+  venueId: {
     type: String,
     required: true,
   },
 });
 
-module.exports = mongoose.model("Clubs", UserSchema);
+module.exports = mongoose.model("Venues", UserSchema);

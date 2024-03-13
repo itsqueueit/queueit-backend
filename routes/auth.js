@@ -1,7 +1,6 @@
 const router = require("express").Router();
-const Club = require("../models/Clubs");
+const Venue = require("../models/Venue");
 const User = require("../models/User");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const verify = require("../jwt/verifyToken");
 const { randomInt } = require("crypto");
@@ -10,29 +9,29 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require("twilio")(accountSid, authToken);
 const verifySid = "VA063566b1499e86f7f81cd09274d12f17";
 
-// add clubs
-router.post("/add-club", async (req, res) => {
+// add Venue
+router.post("/add-venue", async (req, res) => {
   try {
     console.log(req.body);
-    const getClub = await Club.findOne({ clubId: req.body.clubId });
-    if (getClub) {
+    const getVenue = await Venue.findOne({ venueId: req.body.venueId });
+    if (getVenue) {
       return res.status(400).json({
         success: false,
-        message: "Club already exists",
+        message: "Venue already exists",
       });
     }
-    const newClub = new Club({
-      clubType: req.body.clubType,
-      clubName: req.body.clubName,
-      clubId: req.body.clubId,
+    const newVenue = new Venue({
+      venueType: req.body.venueType,
+      venueName: req.body.venueName,
+      venueId: req.body.venueId,
     });
 
-    await newClub.save();
+    await newVenue.save();
 
     return res.status(201).json({
       success: true,
-      message: "Club added successfully",
-      data: newClub,
+      message: "Venue added successfully",
+      data: newVenue,
     });
   } catch (error) {
     return res.status(500).json({
@@ -42,36 +41,37 @@ router.post("/add-club", async (req, res) => {
   }
 });
 
-// Get club information using a QR code.
-router.get("/get-clubs/", async (req, res) => {
+// Get Venue information using a QR code.
+router.get("/get-venue/", async (req, res) => {
   try {
-    const CLUB_ID = req.query.club_id;
-    if (!CLUB_ID) {
+    const venue_Id = req.query.venue_id;
+    if (!venue_Id) {
       return res.status(400).json({
         success: false,
-        message: "Club ID is required in query parameters",
+        message: "Venue ID is required in query parameters",
       });
     }
-    const getClub = await Club.findOne({ clubId: CLUB_ID });
-    // Check if club exists
-    if (!getClub) {
+    const getVenue = await Venue.findOne({ venueId: venue_Id });
+    // Check if Venue exists
+    if (!getVenue) {
       return res.status(404).json({
         success: false,
-        message: "Club not found",
+        message: "Venue not found",
       });
     }
 
     // Create and assign a token
-    const token = jwt.sign({ _id: getClub._id }, process.env.TOKEN_SECRET, {
+    const token = jwt.sign({ _id: getVenue._id }, process.env.TOKEN_SECRET, {
       expiresIn: "1h",
     });
     const refreshToken = jwt.sign(
-      { _id: getClub._id },
+      { _id: getVenue._id },
       process.env.REFRESH_TOKEN_SECRET
     );
     res.json({
       success: true,
-      data: { token, data: getClub },
+      token,
+      data: getVenue,
     });
   } catch (error) {
     return res.status(500).json({
@@ -85,35 +85,14 @@ router.get("/get-clubs/", async (req, res) => {
 router.post("/sign-up", async (req, res) => {
   try {
     const { number } = req.body;
-
-    const existingUser = await User.findOne({ number });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: "User with the same number already exists",
-      });
-    }
     client.verify.v2
       .services(verifySid)
-      .verifications.create({ to: "+917738517189", channel: "sms" })
+      .verifications.create({ to: `+91${number}`, channel: "sms" })
       .then((verification) => console.log(verification.status))
-      .then(() => {
-        const readline = require("readline").createInterface({
-          input: process.stdin,
-          output: process.stdout,
-        });
-        readline.question("Please enter the OTP:", (otpCode) => {
-          client.verify.v2
-            .services(verifySid)
-            .verificationChecks.create({ to: "+917738517189", code: otpCode })
-            .then((verification_check) =>
-              console.log(verification_check.status)
-            )
-            .then(() => readline.close());
-        });
-      });
+      .then((res) => console.log(res));
     res.status(200).json({
       success: true,
+      otp: true,
       message: "OTP sent successfully",
     });
   } catch (error) {
@@ -133,8 +112,20 @@ router.post("/verify-otp", async (req, res) => {
       .verificationChecks.create({ to: `+91${number}`, code: otp });
 
     console.log(verificationCheck.status); // Check the status for debugging
-
+    // Create and assign a token
+    const token = jwt.sign({ user_id }, process.env.TOKEN_SECRET, {
+      expiresIn: "1h",
+    });
     if (verificationCheck.status === "approved") {
+      const existingUser = await User.findOne({ number });
+      if (existingUser) {
+        return res.status(200).json({
+          success: true,
+          token,
+          message: "OTP verified successfully",
+          user: existingUser,
+        });
+      }
       const newUser = new User({
         user_name,
         number,
@@ -143,7 +134,9 @@ router.post("/verify-otp", async (req, res) => {
       await newUser.save();
       return res.status(200).json({
         success: true,
+        token,
         message: "OTP verified successfully",
+        user: existingUser,
       });
     } else {
       return res.status(400).json({

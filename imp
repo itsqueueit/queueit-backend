@@ -6,7 +6,7 @@
 
 
 /// route
-//http://localhost:8101/api/auth/get-clubs/?club_id=123
-//http://localhost:8101/api/auth/api/auth/add-club
+//http://localhost:8101/api/auth/get-venue/?venue_id=123
+//http://localhost:8101/api/auth/api/auth/add-venue
 //http://localhost:8101/aapi/auth/sign-up
 //http://localhost:8101/api/auth/verify-otp
