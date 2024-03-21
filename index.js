@@ -59,14 +59,8 @@ server.listen(8101, () => {
 
 // Socket.IO connection
 io.on("connection", (socket) => {
-  console.log("A user connected");
-  socket.on("send_message", (data) => {
-    const now = new Date();
-    data.time = now;
-    socket.to(123).emit("receive_message", data);
-    // socket.emit("test");
-  });
-  // Handle events here
+  // Handle Initial events here
+  console.log(`User Connected: ${socket.id}`);
   socket.on("disconnect", () => {
     console.log("User disconnected");
     socket.removeAllListeners();
@@ -76,9 +70,18 @@ io.on("connection", (socket) => {
     socket.join(data.room);
     socket.to(123).emit("user_joined", data);
   });
-});
 
+  // Pub Sub messaging
+  socket.on("send_message", (data) => {
+    const now = new Date();
+    data.time = now;
+    socket.to(123).emit("receive_message", data);
+  });
 
-io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
+  // User Action watchers
+  socket.on("user_typing", (data) => {
+    let i = 1
+    console.log(data);
+    socket.to(123).emit("people_typing", data);
+  });
 });
