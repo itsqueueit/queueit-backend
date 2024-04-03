@@ -1,9 +1,22 @@
-//DB_CONNECT=mongodb+srv://itsqueueit:Queueit123@cluster0.1nxm3ie.mongodb.net/
-//TOKEN_SECRET=asdasdawqw
-//REFRESH_TOKEN_SECRET=asdassasdaddawqw
-//TWILIO_ACCOUNT_SID=AC0e14bf96464d3eec0420d7fea2bd710a
-//TWILIO_AUTH_TOKEN=ab5a8f61458f3a9bdbb1ddacbd0d38d1
+//.env
+# mongodb
+DB_CONNECT=mongodb+srv://itsqueueit:Queueit123@cluster0.1nxm3ie.mongodb.net/
 
+# jwt token 
+TOKEN_SECRET=asdasdawqw
+REFRESH_TOKEN_SECRET=asdassasdaddawqw
+
+# twilo for otp 
+TWILIO_ACCOUNT_SID=AC0e14bf96464d3eec0420d7fea2bd710a
+TWILIO_AUTH_TOKEN=62469d4520e6e6e8a7c0000632526bfa
+
+# port and baseurl 
+PORT=8101
+FRONTEND_BASE_URL=http://localhost:5173
+
+# spotify
+CLIENT_ID=404c862800b74cbe99d3a848ace573bf
+CLIENT_SECRET=81cd314442f3441b9e53573590fbf06d
 
 /// route
 //http://localhost:8101/api/auth/get-venue/?venue_id=123
